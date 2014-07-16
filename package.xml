@@ -2,7 +2,7 @@
 <package>
   <name>lm_pantilt</name>
   <version>0.0.1</version>
-  <description>Python driver for the LynxMotion PanTilt unit (2x HS-422 servos) using Adafruit's BeagleBone IO Python library<description>
+  <description>Python driver for the LynxMotion PanTilt unit (2x HS-422 servos) using Adafruit's BeagleBone IO Python library</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
   <!-- Example:  -->
@@ -42,7 +42,7 @@
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>rospy</build_depend>
   <run_depend>rospy</run_depend>
-  
+
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- You can specify that this package is a metapackage here: -->
