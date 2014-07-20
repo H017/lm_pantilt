@@ -35,16 +35,14 @@ class PTU:
         PWM.start(self.pan_pin, self.pan_neutral_duty_cycle, self.frequency)
         
     def reset(self, req):
-        self.pan(self.pan_neutral_duty_cycle)
-        self.tilt(self.pan_neutral_duty_cycle)
-        rospy.sleep(1)
+        self.pan(0)
+        self.tilt(0)
         
         return ResetResponse()
 
     def pan_tilt(self, req):
         self.pan(req.panAngle)
         self.tilt(req.tiltAngle)
-        rospy.sleep(1)
         
         return PanTiltResponse()
 
@@ -58,7 +56,6 @@ class PTU:
                 
     def pan_service(self, req):
         self.pan(req.angle)
-        rospy.sleep(1)
         
         return PanResponse()
 
@@ -74,7 +71,6 @@ class PTU:
         
     def tilt_service(self, req):
         self.tilt(req.angle)
-        rospy.sleep(1)
         
         return TiltResponse()
         
