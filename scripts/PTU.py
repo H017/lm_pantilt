@@ -2,6 +2,7 @@
 
 from lm_pantilt.srv import Start, StartResponse, Stop, StopResponse, Reset, ResetResponse, Pan, PanResponse, Tilt, TiltResponse, PanTilt, PanTiltResponse
 from lm_pantilt.msg import PanTiltState
+from roscpp.srv import GetLoggers
 
 import rospy
 import Adafruit_BBIO.PWM as PWM
@@ -167,7 +168,19 @@ class PTU:
 if __name__ == '__main__':
     ptu = PTU()
     ptu.start()
-    rospy.spin()
+
+    # Check if the core is still up
+    last_core_check = rospy.get_time()
+    get_loggers = rospy.ServiceProxy("/rosout/get_loggers", GetLoggers)
+    try:
+        while not rospy.is_shutdown():
+            if rospy.get_time() - last_core_check > 5:
+                last_core_check = rospy.get_time()
+                get_loggers()
+            rospy.sleep(1)
+    except rospy.ServiceException:
+        print "Lost communication with the core. Stopping..."
+            
     ptu.stop()
     
     

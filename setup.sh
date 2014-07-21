@@ -1,1 +1,0 @@
-rosrun robot_upstart install lm_pantilt/launch/PTU.launch --interface usb0 --master http://192.168.7.1:11311 --user root --job pantilt
