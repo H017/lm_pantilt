@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="lm_pantilt" name="lm_pantilt" type="PTU.py" output="screen">
+    </node>
+</launch>
