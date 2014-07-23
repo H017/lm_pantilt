@@ -1,3 +1,4 @@
 float32 panAngle
 float32 tiltAngle
 ---
+bool success

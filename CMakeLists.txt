@@ -13,6 +13,8 @@ add_message_files(
 
 add_service_files(
   FILES
+  Start.srv
+  Stop.srv
   Pan.srv
   Tilt.srv
   PanTilt.srv
