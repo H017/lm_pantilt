@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 from lm_pantilt.srv import Reset, ResetResponse, Pan, PanResponse, Tilt, TiltResponse, PanTilt, PanTiltResponse
+from lm_pantilt.msg import PanTiltState
+
 import rospy
-import tf
-import math
 import Adafruit_BBIO.PWM as PWM
 
 class PTU:
@@ -26,10 +26,11 @@ class PTU:
 
         self.frequency = rospy.get_param('~frequency', 50)
         self.tilt_arm_height = rospy.get_param('~tilt_arm_height', 0.03)
-        self.pan_value = 0
-        self.tilt_value = 0
 
-        self.tf_publisher = tf.TransformBroadcaster()
+        self.ptu_publisher = rospy.Publisher('/ptu/state', PanTiltState, True)
+        self.pantilt_state = PanTiltState()
+        self.pantilt_state.pan = 0
+        self.pantilt_state.tilt = 0
         
         rospy.Service('~reset', Reset, self.reset)
         rospy.Service('~pan', Pan, self.pan_service)
@@ -42,12 +43,20 @@ class PTU:
     def reset(self, req):
         self.pan(0)
         self.tilt(0)
+
+        self.pantilt_state.pan = 0
+        self.pantilt_state.tilt = 0
+        self.ptu_publisher.publish(self.pantilt_state)
         
         return ResetResponse()
 
     def pan_tilt(self, req):
         self.pan(req.panAngle)
         self.tilt(req.tiltAngle)
+
+        self.pantilt_state.pan = req.panAngle
+        self.pantilt_state.tilt = req.tiltAngle
+        self.ptu_publisher.publish(self.pantilt_state)
         
         return PanTiltResponse()
 
@@ -62,6 +71,9 @@ class PTU:
 
     def pan_service(self, req):
         self.pan(req.angle)
+
+        self.pantilt_state.pan = req.angle
+        self.ptu_publisher.publish(self.pantilt_state)
         
         return PanResponse()
 
@@ -76,6 +88,9 @@ class PTU:
 
     def tilt_service(self, req):
         self.tilt(req.angle)
+
+        self.pantilt_state.tilt = req.angle
+        self.ptu_publisher.publish(self.pantilt_state)
         
         return TiltResponse()
         
@@ -85,18 +100,8 @@ class PTU:
         PWM.cleanup()
                             
 if __name__ == '__main__':
-    rate = rospy.Rate(10.0)
     ptu = PTU()
-
-    while not rospy.is_shutdown():
-        ptu.tf_publisher.sendTransform((0, 0, ptu.tilt_arm_height),
-                                        tf.transformations.quaternion_from_euler(0, ptu.tilt_value, ptu.pan_value),
-                                        rospy.Time.now(),
-                                        "ptu",
-                                        "base_ptu")
-
-        rate.sleep()
-
+    rospy.spin()
     ptu.stop()
     
     
