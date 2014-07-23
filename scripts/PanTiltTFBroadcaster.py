@@ -15,28 +15,31 @@ if __name__ == '__main__':
 
     pan_rotation = 0
     tilt_rotation = 0
-    pan_translation = rospy.get_param('~pan_translation', 1.5) # Need to test
-    tilt_translation = rospy.get_param('~tilt_translation', 0.5)#0.042)
+    pan_height = rospy.get_param('~pan_height', 0.062)
+    pan_translation = rospy.get_param('~pan_translation', 0)
+    tilt_height = rospy.get_param('~tilt_height', 0.038)
+    attachment_translation = tilt_height + rospy.get_param('~attachment_translation', 0)
+    attachment_frame_name = rospy.get_param('~attachment_frame_name', "attachment_frame")
 
     rospy.Subscriber('/ptu/state',
                      PanTiltState,
                      pantilt_state_callback)
 
-    ptu_rotation_frame_broadcaster = tf.TransformBroadcaster()
-    ptu_translation_frame_broadcaster = tf.TransformBroadcaster()
+    ptu_frame_broadcaster = tf.TransformBroadcaster()
+    attachment_frame_broadcaster = tf.TransformBroadcaster()
     r = rospy.Rate(10)
 
     while not rospy.is_shutdown():
-        ptu_rotation_frame_broadcaster.sendTransform((0, 0, pan_translation),  # Need to test
-            tf.transformations.quaternion_from_euler(0, tilt_rotation, pan_rotation), # Need to test
+        ptu_frame_broadcaster.sendTransform((0, 0, pan_translation),
+            tf.transformations.quaternion_from_euler(0, tilt_rotation, pan_rotation),
             rospy.Time.now(),
-            "pan_frame",
+            "ptu_frame",
             "base_link")
 
-        ptu_translation_frame_broadcaster.sendTransform((0, 0, tilt_translation),
+        attachment_frame_broadcaster.sendTransform((0, 0, attachment_translation),
             tf.transformations.quaternion_from_euler(0, 0, 0),
             rospy.Time.now(),
-            "tilt_frame",
-            "pan_frame")
+            attachment_frame_name,
+            "ptu_frame")
 
         r.sleep()
