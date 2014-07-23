@@ -39,14 +39,14 @@ class PTU:
 
         PWM.start(self.tilt_pin, self.tilt_neutral_duty_cycle, self.frequency)
         PWM.start(self.pan_pin, self.pan_neutral_duty_cycle, self.frequency)
+
+        self.publish_ptu_state(0, 0)
         
     def reset(self, req):
         self.pan(0)
         self.tilt(0)
 
-        self.pantilt_state.pan = 0
-        self.pantilt_state.tilt = 0
-        self.ptu_publisher.publish(self.pantilt_state)
+        self.publish_ptu_state(0, 0)
         
         return ResetResponse()
 
@@ -54,9 +54,7 @@ class PTU:
         self.pan(req.panAngle)
         self.tilt(req.tiltAngle)
 
-        self.pantilt_state.pan = req.panAngle
-        self.pantilt_state.tilt = req.tiltAngle
-        self.ptu_publisher.publish(self.pantilt_state)
+        self.publish_ptu_state(req.panAngle, req.tiltAngle)
         
         return PanTiltResponse()
 
@@ -72,8 +70,7 @@ class PTU:
     def pan_service(self, req):
         self.pan(req.angle)
 
-        self.pantilt_state.pan = req.angle
-        self.ptu_publisher.publish(self.pantilt_state)
+        self.publish_ptu_state(pan=req.angle)
         
         return PanResponse()
 
@@ -89,10 +86,18 @@ class PTU:
     def tilt_service(self, req):
         self.tilt(req.angle)
 
-        self.pantilt_state.tilt = req.angle
-        self.ptu_publisher.publish(self.pantilt_state)
+        self.publish_ptu_state(tilt=req.angle)
         
         return TiltResponse()
+
+    def publish_ptu_state(self, pan=None, tilt=None):
+        if(pan is not None):
+            self.pantilt_state.pan = pan
+
+        if(tilt is not None):
+            self.pantilt_state.tilt = tilt
+
+        self.ptu_publisher.publish(self.pantilt_state)
         
     def stop(self):
         PWM.stop(self.pan_pin) 
