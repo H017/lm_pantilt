@@ -166,6 +166,7 @@ class PTU:
                             
 if __name__ == '__main__':
     ptu = PTU()
+    ptu.start()
     rospy.spin()
     ptu.stop()
     
