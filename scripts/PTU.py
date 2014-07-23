@@ -19,9 +19,9 @@ class PTU:
 
         self.tilt_pin = rospy.get_param('~tilt_pin', 'P9_14')
         self.tilt_neutral_duty_cycle = rospy.get_param('~tilt_neutral_duty_cycle', 11.03)
-        self.tilt_min_duty_cycle = rospy.get_param('~tilt_min_duty_cycle', 4.6)
-        self.tilt_max_duty_cycle = rospy.get_param('~tilt_max_duty_cycle', 10.9)
-        self.tilt_min_angle = rospy.get_param('~tilt_min_angle', 30)
+        self.tilt_min_duty_cycle = rospy.get_param('~tilt_min_duty_cycle', 6.2)
+        self.tilt_max_duty_cycle = rospy.get_param('~tilt_max_duty_cycle', 12.66)
+        self.tilt_min_angle = rospy.get_param('~tilt_min_angle', -30)
         self.tilt_max_angle = rospy.get_param('~tilt_max_angle', 90)
 
         self.frequency = rospy.get_param('~frequency', 50)
