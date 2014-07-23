@@ -27,7 +27,7 @@ class PTU:
         self.frequency = rospy.get_param('~frequency', 50)
         self.tilt_arm_height = rospy.get_param('~tilt_arm_height', 0.03)
 
-        self.ptu_publisher = rospy.Publisher('/ptu/state', PanTiltState, True)
+        self.ptu_publisher = rospy.Publisher('/ptu/state', PanTiltState, queue_size=10, latch=True)
         self.pantilt_state = PanTiltState()
         self.pantilt_state.pan = 0
         self.pantilt_state.tilt = 0
