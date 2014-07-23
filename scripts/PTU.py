@@ -21,8 +21,8 @@ class PTU:
         self.tilt_neutral_duty_cycle = rospy.get_param('~tilt_neutral_duty_cycle', 11.03)
         self.tilt_min_duty_cycle = rospy.get_param('~tilt_min_duty_cycle', 4.6)
         self.tilt_max_duty_cycle = rospy.get_param('~tilt_max_duty_cycle', 10.9)
-        self.tilt_min_angle = rospy.get_param('~tilt_min_angle', -90)
-        self.tilt_max_angle = rospy.get_param('~tilt_max_angle', 30)
+        self.tilt_min_angle = rospy.get_param('~tilt_min_angle', 30)
+        self.tilt_max_angle = rospy.get_param('~tilt_max_angle', 90)
 
         self.frequency = rospy.get_param('~frequency', 50)
         self.tilt_arm_height = rospy.get_param('~tilt_arm_height', 0.03)
@@ -80,7 +80,7 @@ class PTU:
         elif(angle < self.tilt_min_angle):
             angle = self.tilt_min_angle
 
-        PWM.set_duty_cycle(self.tilt_pin, angle * ((self.tilt_max_duty_cycle - self.tilt_min_duty_cycle) / (self.tilt_max_angle - self.tilt_min_angle)) + self.tilt_neutral_duty_cycle)
+        PWM.set_duty_cycle(self.tilt_pin, -angle * ((self.tilt_max_duty_cycle - self.tilt_min_duty_cycle) / (self.tilt_max_angle - self.tilt_min_angle)) + self.tilt_neutral_duty_cycle)
         self.tilt_angle = angle
 
     def tilt_service(self, req):
