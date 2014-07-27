@@ -9,7 +9,7 @@ def pantilt_state_callback(pantilt_state):
 
     tilt_rotation = pantilt_state.tilt * (math.pi / 180)
     pan_rotation = pantilt_state.pan * (math.pi / 180)
-
+    
 if __name__ == '__main__':
     rospy.init_node('pan_tilt_tf_broadcaster')
 
@@ -23,12 +23,12 @@ if __name__ == '__main__':
                      pantilt_state_callback)
 
     broadcaster = tf.TransformBroadcaster()
-    r = rospy.Rate(100)
+    r = rospy.Rate(50)
 
     while not rospy.is_shutdown():
 
         broadcaster.sendTransform((0, 0, pan_height),
-            tf.transformations.quaternion_from_euler(0, tilt_rotation, pan_rotation),
+            tf.transformations.quaternion_from_euler(0, -tilt_rotation, pan_rotation),
             rospy.Time.now(),
             "ptu_pan_tilt",
             "ptu")
