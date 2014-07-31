@@ -8,8 +8,8 @@ if [ -f $IBEX_HOME/devel/setup.bash ]; then
     source $IBEX_HOME/devel/setup.bash
 fi
 
-export ROS_MASTER_URI=http://192.168.7.1:11311/
-export ROS_IP=192.168.7.2
+export ROS_MASTER_URI=http://192.168.32.100:11311/
+export ROS_IP=192.168.32.245
 
 while true
 do
